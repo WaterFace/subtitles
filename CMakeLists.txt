@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(
-	SamplePlugin
-	VERSION 0.7.5
+	Subtitles
+	VERSION 0.1.0
 	LANGUAGES CXX
 )
 
@@ -12,7 +12,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 # ## Build options
 # ########################################################################################################################
 message("Options:")
-option(AUTO_PLUGIN_DEPLOYMENT "Copy the build output and addons to env:SamplePluginOutputDir." OFF)
+option(AUTO_PLUGIN_DEPLOYMENT "Copy the build output and addons to env:SubtitlesOutputDir." OFF)
 option(ZIP_TO_DIST "Zip the base mod and addons to their own 7z file in dist." ON)
 option(AIO_ZIP_TO_DIST "Zip the base mod and addons to a AIO 7z file in dist." OFF)
 message("\tAuto plugin deployment: ${AUTO_PLUGIN_DEPLOYMENT}")
@@ -36,6 +36,7 @@ target_include_directories(
 	${PROJECT_NAME}
 	PRIVATE
 	${CLIB_UTIL_INCLUDE_DIRS}
+	extern/CommonLibSSE-NG/include
 )
 
 target_link_libraries(
@@ -70,7 +71,7 @@ endif()
 # # Automatic deployment
 # #######################################################################################################################
 if(AUTO_PLUGIN_DEPLOYMENT)
-	foreach(DEPLOY_TARGET $ENV{SamplePluginOutputDir})
+	foreach(DEPLOY_TARGET $ENV{SubtitlesOutputDir})
 		message("Copying AIO to ${DEPLOY_TARGET}")
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> "${DEPLOY_TARGET}/SKSE/Plugins/"
@@ -78,7 +79,7 @@ if(AUTO_PLUGIN_DEPLOYMENT)
 		)
 	endforeach()
 
-	if(NOT DEFINED ENV{SamplePluginOutputDir})
-		message("When using AUTO_PLUGIN_DEPLOYMENT option, you need to set environment variable 'SamplePluginOutputDir'")
+	if(NOT DEFINED ENV{SubtitlesOutputDir})
+		message("When using AUTO_PLUGIN_DEPLOYMENT option, you need to set environment variable 'SubtitlesOutputDir'")
 	endif()
 endif()

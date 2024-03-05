@@ -1,4 +1,5 @@
 #define DLLEXPORT __declspec(dllexport)
+#include "Hooks.h"
 
 void InitializeLog([[maybe_unused]] spdlog::level::level_enum a_level = spdlog::level::info)
 {
@@ -24,11 +25,30 @@ void InitializeLog([[maybe_unused]] spdlog::level::level_enum a_level = spdlog::
 	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] [%t] [%s:%#] %v");
 }
 
+void InitializeMessaging()
+{
+	if (!SKSE::GetMessagingInterface()->RegisterListener([](SKSE::MessagingInterface::Message* message) {
+			switch (message->type) {
+			case SKSE::MessagingInterface::kDataLoaded:
+				Subtitles::Hooks::Install();
+				break;
+
+			default:
+				break;
+			}
+		})) {
+		SKSE::stl::report_and_fail("Unable to register message listener.");
+	}
+}
+
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 {
 	InitializeLog();
 	logger::info("Loaded plugin {} {}", Plugin::NAME, Plugin::VERSION.string());
 	SKSE::Init(a_skse);
+
+	InitializeMessaging();
+
 	return true;
 }
 
