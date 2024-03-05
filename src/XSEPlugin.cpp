@@ -47,6 +47,10 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	logger::info("Loaded plugin {} {}", Plugin::NAME, Plugin::VERSION.string());
 	SKSE::Init(a_skse);
 
+	auto& trampoline = SKSE::GetTrampoline();
+	trampoline.create(64);
+	logger::info("Trampoline initialized");
+
 	InitializeMessaging();
 
 	return true;

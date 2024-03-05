@@ -1,3 +1,5 @@
+#include "SubtitleManager.h"
+
 namespace Subtitles
 {
 	namespace Hooks
@@ -21,17 +23,38 @@ namespace Subtitles
 			// call original function
 			UpdatePC(pc, delta);
 
+			auto myManager = SubtitleManager::GetSingleton();
 			auto subtitleManager = RE::SubtitleManager::GetSingleton();
-			logger::info("{} subtitles currently active:", subtitleManager->subtitles.size());
-			for (auto& subtitleInfo : subtitleManager->subtitles) {
-				std::string speakerName;
-				if (auto speaker = subtitleInfo.speaker.get()) {
-					speakerName = speaker->GetName();
-				}
-				logger::info("\t{}: {}", speakerName, subtitleInfo.subtitle.c_str());
+			for (RE::SubtitleInfo& subtitleInfo : subtitleManager->subtitles) {
+				myManager->AddSubtitle(&subtitleInfo);
 			}
+
+			myManager->ShowSubtitles();
 		}
 		static inline REL::Relocation<decltype(UpdatePCMod)> UpdatePC;
+	};
+
+	// Hook the place where the RE::SubtitleManager sends the message containing the subtitle to the UI
+	class AddSubtitleMessage
+	{
+	public:
+		static void Install()
+		{
+			auto address = REL::VariantID(0, 52637, 0).address();    // TODO: get SE and VR addresses
+			auto offset = REL::VariantOffset(0, 0x18E, 0).offset();  // TODO: etc.
+			AddMessage = SKSE::GetTrampoline().write_call<5>(address + offset, AddMessageMod);
+			logger::info("UIMessageQueue::AddMessage hooked");
+		}
+
+	private:
+		static void AddMessageMod(RE::UIMessageQueue* queue, RE::BSFixedString* menuName, RE::UI_MESSAGE_TYPE type, RE::IUIMessageData* data)
+		{
+			// do nothing on purpose
+			if (false) {
+				AddMessage(queue, menuName, type, data);
+			}
+		}
+		static inline REL::Relocation<decltype(AddMessageMod)> AddMessage;
 	};
 
 }

@@ -32,6 +32,13 @@ find_package(xbyak CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_path(CLIB_UTIL_INCLUDE_DIRS "ClibUtil/utils.hpp")
 
+target_sources(
+	${PROJECT_NAME}
+	PRIVATE
+	src/Hooks.cpp
+	src/SubtitleManager.cpp
+)
+
 target_include_directories(
 	${PROJECT_NAME}
 	PRIVATE
