@@ -42,7 +42,6 @@ namespace Subtitles
 		}
 
 		activeSubtitles.clear();
-		logger::info("big subtitle: {}", bigSubtitle.str());
 
 		auto hudMenu = RE::UI::GetSingleton()->GetMenu<RE::HUDMenu>(RE::HUDMenu::MENU_NAME);
 		auto root = hudMenu->GetRuntimeData().root;
