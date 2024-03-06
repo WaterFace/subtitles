@@ -43,6 +43,10 @@ void InitializeMessaging()
 
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 {
+	// PRs welcome!
+	if (REL::Module::IsVR()) {
+		SKSE::stl::report_and_fail(std::format("{} does not support Skyrim VR", Plugin::NAME));
+	}
 	InitializeLog();
 	logger::info("Loaded plugin {} {}", Plugin::NAME, Plugin::VERSION.string());
 	SKSE::Init(a_skse);
