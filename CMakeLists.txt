@@ -13,11 +13,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 # ########################################################################################################################
 message("Options:")
 option(AUTO_PLUGIN_DEPLOYMENT "Copy the build output and addons to env:SubtitlesOutputDir." OFF)
-option(ZIP_TO_DIST "Zip the base mod and addons to their own 7z file in dist." ON)
-option(AIO_ZIP_TO_DIST "Zip the base mod and addons to a AIO 7z file in dist." OFF)
 message("\tAuto plugin deployment: ${AUTO_PLUGIN_DEPLOYMENT}")
-message("\tZip to dist: ${ZIP_TO_DIST}")
-message("\tAIO Zip to dist: ${AIO_ZIP_TO_DIST}")
 
 # #######################################################################################################################
 # # Add CMake features
