@@ -1,5 +1,7 @@
 #include <vector>
 
+#include "Configuration.h"
+
 namespace Subtitles
 {
 	// struct SubtitleData
@@ -24,7 +26,7 @@ namespace Subtitles
 		void ShowSubtitles();
 
 		// TODO: make configurable
-		uint32_t maxDisplayedSubtitles = 4;
+		uint32_t maxDisplayedSubtitles = Subtitles::Configuration::GetSingleton()->numDisplayedSubtitles;
 
 		std::vector<RE::SubtitleInfo*> activeSubtitles;
 

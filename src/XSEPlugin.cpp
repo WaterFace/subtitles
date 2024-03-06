@@ -1,4 +1,5 @@
 #define DLLEXPORT __declspec(dllexport)
+#include "Configuration.h"
 #include "Hooks.h"
 
 void InitializeLog([[maybe_unused]] spdlog::level::level_enum a_level = spdlog::level::info)
@@ -31,6 +32,7 @@ void InitializeMessaging()
 			switch (message->type) {
 			case SKSE::MessagingInterface::kDataLoaded:
 				Subtitles::Hooks::Install();
+				Subtitles::Configuration::GetSingleton()->Initialize();
 				break;
 
 			default:

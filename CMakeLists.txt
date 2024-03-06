@@ -27,9 +27,7 @@ include(XSEPlugin)
 # #######################################################################################################################
 # # Find dependencies
 # #######################################################################################################################
-find_package(magic_enum CONFIG REQUIRED)
 find_package(xbyak CONFIG REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
 find_path(CLIB_UTIL_INCLUDE_DIRS "ClibUtil/utils.hpp")
 
 target_sources(
@@ -50,9 +48,7 @@ target_include_directories(
 target_link_libraries(
 	${PROJECT_NAME}
 	PRIVATE
-	magic_enum::magic_enum
 	xbyak::xbyak
-	nlohmann_json::nlohmann_json
 )
 
 # https://gitlab.kitware.com/cmake/cmake/-/issues/24922#note_1371990
@@ -84,6 +80,7 @@ if(AUTO_PLUGIN_DEPLOYMENT)
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> "${DEPLOY_TARGET}/SKSE/Plugins/"
 			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:${PROJECT_NAME}> "${DEPLOY_TARGET}/SKSE/Plugins/"
+			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.ini" "${DEPLOY_TARGET}/SKSE/Plugins/"
 		)
 	endforeach()
 
