@@ -12,7 +12,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 # ## Build options
 # ########################################################################################################################
 message("Options:")
-option(AUTO_PLUGIN_DEPLOYMENT "Copy the build output and addons to env:SubtitlesOutputDir." OFF)
+option(AUTO_PLUGIN_DEPLOYMENT "Copy the build output and addons to env:${PROJECT_NAME}OutputDir." OFF)
 message("\tAuto plugin deployment: ${AUTO_PLUGIN_DEPLOYMENT}")
 
 # #######################################################################################################################
@@ -71,7 +71,7 @@ endif()
 # # Automatic deployment
 # #######################################################################################################################
 if(AUTO_PLUGIN_DEPLOYMENT)
-	foreach(DEPLOY_TARGET $ENV{SubtitlesOutputDir})
+	foreach(DEPLOY_TARGET $ENV{${PROJECT_NAME}OutputDir})
 		message("Copying AIO to ${DEPLOY_TARGET}")
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> "${DEPLOY_TARGET}/SKSE/Plugins/"
@@ -80,7 +80,7 @@ if(AUTO_PLUGIN_DEPLOYMENT)
 		)
 	endforeach()
 
-	if(NOT DEFINED ENV{SubtitlesOutputDir})
-		message("When using AUTO_PLUGIN_DEPLOYMENT option, you need to set environment variable 'SubtitlesOutputDir'")
+	if(NOT DEFINED ENV{${PROJECT_NAME}OutputDir})
+		message("When using AUTO_PLUGIN_DEPLOYMENT option, you need to set environment variable '${PROJECT_NAME}OutputDir'")
 	endif()
 endif()
