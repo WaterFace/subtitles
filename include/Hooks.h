@@ -1,3 +1,4 @@
+#include "IUIMessageData.h"
 #include "SubtitleManager.h"
 
 namespace Subtitles
@@ -50,7 +51,9 @@ namespace Subtitles
 		static void AddMessageMod(RE::UIMessageQueue* queue, RE::BSFixedString* menuName, RE::UI_MESSAGE_TYPE type, RE::IUIMessageData* data)
 		{
 			// do nothing on purpose
-			if (false) {
+			auto messageData = reinterpret_cast<Subtitle::IUIMessageData*>(data);
+			logger::trace("payload: {}, type: {}", messageData->payload.c_str(), messageData->type);
+			if (messageData->type != Subtitle::MessageType::kShowSubtitle) {
 				AddMessage(queue, menuName, type, data);
 			}
 		}
