@@ -23,6 +23,9 @@ namespace Subtitles
 		void AddSubtitle(RE::SubtitleInfo* info);
 		void ShowSubtitles();
 
+		// TODO: make configurable
+		uint32_t maxDisplayedSubtitles = 4;
+
 		std::vector<RE::SubtitleInfo*> activeSubtitles;
 
 	protected:

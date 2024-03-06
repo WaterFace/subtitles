@@ -35,7 +35,12 @@ namespace Subtitles
 		std::stringstream bigSubtitle{};
 
 		bool first = true;
+		uint32_t numDisplayed = 0;
 		for (auto info : activeSubtitles) {
+			if (numDisplayed >= maxDisplayedSubtitles) {
+				break;
+			}
+
 			// `targetDistance` is the squared distance
 			if (info && info->targetDistance < maxSubtitleDistance * maxSubtitleDistance) {
 				if (!first) {
@@ -47,6 +52,7 @@ namespace Subtitles
 				} else {
 					bigSubtitle << info->subtitle.c_str();
 				}
+				numDisplayed += 1;
 
 				first = false;
 			}
