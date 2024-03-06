@@ -49,7 +49,7 @@ namespace Subtitles
 	private:
 		static void AddMessageMod(RE::UIMessageQueue* queue, RE::BSFixedString* menuName, RE::UI_MESSAGE_TYPE type, RE::HUDData* data)
 		{
-			if (data->type != RE::HUDData::Type::kSubtitle) {
+			if (!data || data->type != RE::HUDData::Type::kSubtitle) {
 				AddMessage(queue, menuName, type, data);
 			}
 		}
