@@ -40,8 +40,9 @@ namespace Subtitles
 	public:
 		static void Install()
 		{
-			auto address = REL::VariantID(51761, 52637, 0).address();    // TODO: get SE and VR addresses
-			auto offset = REL::VariantOffset(0x1A2, 0x18E, 0).offset();  // TODO: etc.
+			// TODO: get VR address and offset
+			auto address = REL::VariantID(51761, 52637, 0).address();
+			auto offset = REL::VariantOffset(0x1A2, 0x18E, 0).offset();
 			AddMessage = SKSE::GetTrampoline().write_call<5>(address + offset, AddMessageMod);
 			logger::info("UIMessageQueue::AddMessage hooked");
 		}
