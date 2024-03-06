@@ -44,6 +44,7 @@ target_include_directories(
 	PRIVATE
 	${CLIB_UTIL_INCLUDE_DIRS}
 	extern/CommonLibSSE-NG/include
+	include/
 )
 
 target_link_libraries(
