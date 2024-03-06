@@ -1,4 +1,3 @@
-#include "IUIMessageData.h"
 #include "SubtitleManager.h"
 
 namespace Subtitles
@@ -41,19 +40,16 @@ namespace Subtitles
 	public:
 		static void Install()
 		{
-			auto address = REL::VariantID(0, 52637, 0).address();    // TODO: get SE and VR addresses
-			auto offset = REL::VariantOffset(0, 0x18E, 0).offset();  // TODO: etc.
+			auto address = REL::VariantID(51761, 52637, 0).address();    // TODO: get SE and VR addresses
+			auto offset = REL::VariantOffset(0x1A2, 0x18E, 0).offset();  // TODO: etc.
 			AddMessage = SKSE::GetTrampoline().write_call<5>(address + offset, AddMessageMod);
 			logger::info("UIMessageQueue::AddMessage hooked");
 		}
 
 	private:
-		static void AddMessageMod(RE::UIMessageQueue* queue, RE::BSFixedString* menuName, RE::UI_MESSAGE_TYPE type, RE::IUIMessageData* data)
+		static void AddMessageMod(RE::UIMessageQueue* queue, RE::BSFixedString* menuName, RE::UI_MESSAGE_TYPE type, RE::HUDData* data)
 		{
-			// do nothing on purpose
-			auto messageData = reinterpret_cast<Subtitle::IUIMessageData*>(data);
-			logger::trace("payload: {}, type: {}", messageData->payload.c_str(), messageData->type);
-			if (messageData->type != Subtitle::MessageType::kShowSubtitle) {
+			if (data->type != RE::HUDData::Type::kSubtitle) {
 				AddMessage(queue, menuName, type, data);
 			}
 		}
