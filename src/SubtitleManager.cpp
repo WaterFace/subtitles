@@ -2,6 +2,18 @@
 
 namespace Subtitles
 {
+	const char* SubtitleManager::GetDisplayName(RE::TESObjectREFR* ref)
+	{
+		auto actor = ref ? ref->As<RE::Actor>() : nullptr;
+		auto xTextData = actor ? actor->extraList.GetByType<RE::ExtraTextDisplayData>() : nullptr;
+
+		if (xTextData) {
+			return xTextData->displayName.c_str();
+		} else {
+			return ref->GetName();
+		}
+	}
+
 	void SubtitleManager::AddSubtitle(RE::SubtitleInfo* info)
 	{
 		if (!info) {
@@ -30,8 +42,7 @@ namespace Subtitles
 					bigSubtitle << "<br>";
 				}
 				if (showSpeakerName) {
-					// TODO: get DisplayName instead
-					auto speakerName = info->speaker.get()->GetName();
+					auto speakerName = GetDisplayName(info->speaker.get().get());
 					bigSubtitle << std::format(speakerNameFmtString, speakerNameColor, speakerName, info->subtitle.c_str());
 				} else {
 					bigSubtitle << info->subtitle.c_str();

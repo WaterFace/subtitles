@@ -18,6 +18,8 @@ namespace Subtitles
 			return &sm;
 		}
 
+		static const char* GetDisplayName(RE::TESObjectREFR* ref);
+
 		void AddSubtitle(RE::SubtitleInfo* info);
 		void ShowSubtitles();
 
