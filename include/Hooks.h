@@ -33,24 +33,4 @@ namespace Subtitles
 		}
 		static inline REL::Relocation<decltype(UpdatePCMod)> UpdatePC;
 	};
-
-	class AddSubtitleMessage
-	{
-	public:
-		static void Install()
-		{
-			AddMessage = RE::Offset::UIMessageQueue::AddMessage;
-		}
-
-	private:
-		static void AddMessageMod(RE::UIMessageQueue* queue, RE::BSFixedString* menuName, RE::UI_MESSAGE_TYPE type, RE::HUDData* data)
-		{
-			// Don't pass through messages that lead to the `ShowSubtitles` branch. We'll handle those
-			if (!data || data->type != RE::HUDData::Type::kSubtitle) {
-				AddMessage(queue, menuName, type, data);
-			}
-		}
-		static inline REL::Relocation<decltype(AddMessageMod)> AddMessage;
-	};
-
 }
