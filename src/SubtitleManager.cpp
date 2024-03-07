@@ -46,8 +46,11 @@ namespace Subtitles
 				if (!first) {
 					bigSubtitle << "<br>";
 				}
-				if (showSpeakerName) {
-					auto speakerName = GetDisplayName(info->speaker.get().get());
+
+				// Talking Activators don't have a name, so handle that gracefully
+				auto speakerName = GetDisplayName(info->speaker.get().get());
+
+				if (showSpeakerName && speakerName && speakerName[0]) {
 					bigSubtitle << std::format(speakerNameFmtString, speakerNameColor, speakerName, info->subtitle.c_str());
 				} else {
 					bigSubtitle << info->subtitle.c_str();
