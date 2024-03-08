@@ -51,7 +51,7 @@ namespace Subtitles
 			}
 
 			// `targetDistance` is the squared distance
-			if (info && info->targetDistance < maxSubtitleDistance * maxSubtitleDistance) {
+			if (info && (info->forceDisplay || info->targetDistance < maxSubtitleDistance * maxSubtitleDistance)) {
 				if (!first) {
 					bigSubtitle << "<br>";
 				}
