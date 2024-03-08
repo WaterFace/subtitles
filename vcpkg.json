@@ -1,6 +1,6 @@
 {
   "name": "subtitles",
-  "version-semver": "0.3.0",
+  "version-semver": "0.4.0",
   "description": "",
   "license": "GPL-3.0",
   "dependencies": [
