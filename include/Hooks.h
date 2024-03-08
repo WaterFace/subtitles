@@ -35,8 +35,9 @@ namespace Subtitles
 	public:
 		static void Install()
 		{
-			auto address = REL::VariantID(0, 52629, 0).address();
-			auto offset = REL::VariantOffset(0, 0xA0, 0).offset();
+			// VR PRs welcome!
+			auto address = REL::VariantID(51755, 52629, 0).address();
+			auto offset = REL::VariantOffset(0x9A, 0xA0, 0).offset();
 			AddMessage = SKSE::GetTrampoline().write_call<5>(address + offset, AddMessageMod);
 			logger::info("UIMessageQueue::AddMessage hooked");
 		}
@@ -58,7 +59,11 @@ namespace Subtitles
 		void Install()
 		{
 			Subtitles::UpdatePCHook::Install();
-			Subtitles::HideSubtitlesHook::Install();
+			if (!REL::Module::IsVR()) {
+				Subtitles::HideSubtitlesHook::Install();
+			} else {
+				logger::info("Skipping AddMessage hook because I don't have the VR offset yet!");
+			}
 		}
 	}
 }
