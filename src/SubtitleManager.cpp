@@ -20,6 +20,22 @@ namespace Subtitles
 			return;
 		}
 
+		// if the new subtitle has the same distance as the previous one
+		// insert it so the two are sorted by their pointers, to avoid flickering
+		if (activeSubtitles.size() > 0) {
+			auto prev = activeSubtitles[activeSubtitles.size() - 1];
+
+			if (prev->targetDistance == info->targetDistance) {
+				auto ptr0 = prev->speaker.get().get();
+				auto ptr1 = info->speaker.get().get();
+				if (ptr0 > ptr1) {
+					auto it = activeSubtitles.begin() + activeSubtitles.size() - 1;
+					activeSubtitles.insert(it, info);
+					return;
+				}
+			}
+		}
+
 		activeSubtitles.push_back(info);
 	}
 
