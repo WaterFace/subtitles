@@ -20,22 +20,6 @@ namespace Subtitles
 			return;
 		}
 
-		// if the new subtitle has the same distance as the previous one
-		// insert it so the two are sorted by their pointers, to avoid flickering
-		if (activeSubtitles.size() > 0) {
-			auto prev = activeSubtitles[activeSubtitles.size() - 1];
-
-			if (prev->targetDistance == info->targetDistance) {
-				auto ptr0 = prev->speaker.get().get();
-				auto ptr1 = info->speaker.get().get();
-				if (ptr0 > ptr1) {
-					auto it = activeSubtitles.begin() + activeSubtitles.size() - 1;
-					activeSubtitles.insert(it, info);
-					return;
-				}
-			}
-		}
-
 		activeSubtitles.push_back(info);
 	}
 
@@ -47,6 +31,15 @@ namespace Subtitles
 		uint32_t speakerNameColor = iniSettings->GetSetting("iSubtitleSpeakerNameColor:Interface")->GetUInt();
 
 		constexpr const char* speakerNameFmtString = "<font color='#{:06X}'>{}</font>: {}";
+
+		// avoid the flickering in combat issue
+		std::sort(activeSubtitles.begin(), activeSubtitles.end(), [](RE::SubtitleInfo*& a, RE::SubtitleInfo*& b) {
+			if (a->targetDistance < b->targetDistance)
+				return true;
+			if (a->targetDistance > b->targetDistance)
+				return false;
+			return a->speaker.get().get() < b->speaker.get().get();
+		});
 
 		std::stringstream bigSubtitle{};
 
