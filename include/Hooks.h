@@ -2,11 +2,6 @@
 
 namespace Subtitles
 {
-	namespace Hooks
-	{
-		void Install();
-	}
-
 	class UpdatePCHook
 	{
 	public:
@@ -33,4 +28,37 @@ namespace Subtitles
 		}
 		static inline REL::Relocation<decltype(UpdatePCMod)> UpdatePC;
 	};
+
+	// Hook into calls to UIMessageQueue::AddMessage with message data corresponding to a "HideSubtitles" invocation
+	class HideSubtitlesHook
+	{
+	public:
+		static void Install()
+		{
+			auto address = REL::VariantID(0, 52629, 0).address();
+			auto offset = REL::VariantOffset(0, 0xA0, 0).offset();
+			AddMessage = SKSE::GetTrampoline().write_call<5>(address + offset, AddMessageMod);
+			logger::info("UIMessageQueue::AddMessage hooked");
+		}
+
+	private:
+		static void AddMessageMod(
+			[[maybe_unused]] RE::UIMessageQueue* queue,
+			[[maybe_unused]] RE::BSFixedString* menu,
+			[[maybe_unused]] RE::UI_MESSAGE_TYPE type,
+			[[maybe_unused]] RE::HUDData* data)
+		{
+			// do nothing on purpose
+		}
+		static inline REL::Relocation<decltype(AddMessageMod)> AddMessage;
+	};
+
+	namespace Hooks
+	{
+		void Install()
+		{
+			Subtitles::UpdatePCHook::Install();
+			Subtitles::HideSubtitlesHook::Install();
+		}
+	}
 }

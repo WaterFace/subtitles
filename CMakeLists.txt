@@ -29,7 +29,6 @@ find_path(CLIB_UTIL_INCLUDE_DIRS "ClibUtil/utils.hpp")
 target_sources(
 	${PROJECT_NAME}
 	PRIVATE
-	src/Hooks.cpp
 	src/SubtitleManager.cpp
 )
 
