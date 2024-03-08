@@ -29,29 +29,28 @@ namespace Subtitles
 		static inline REL::Relocation<decltype(UpdatePCMod)> UpdatePC;
 	};
 
-	// Hook into calls to UIMessageQueue::AddMessage with message data corresponding to a "HideSubtitles" invocation
-	class HideSubtitlesHook
+	// Hook into the Invoke call in HUDMenu::ProcessMessage which calls "HideSubtitle"
+	class InvokeHook
 	{
 	public:
 		static void Install()
 		{
-			// VR PRs welcome!
-			auto address = REL::VariantID(51755, 52629, 0).address();
-			auto offset = REL::VariantOffset(0x9A, 0xA0, 0).offset();
-			AddMessage = SKSE::GetTrampoline().write_call<5>(address + offset, AddMessageMod);
-			logger::info("UIMessageQueue::AddMessage hooked");
+			auto address = REL::VariantID(50718, 51612, 0).address();
+			auto offset = REL::VariantOffset(0x756, 0x77E, 0).offset();
+			SKSE::GetTrampoline().write_call<5>(address + offset, InvokeMod);
+			logger::info("Invoke call in HUDMenu::ProcessMessage hooked");
 		}
 
 	private:
-		static void AddMessageMod(
-			[[maybe_unused]] RE::UIMessageQueue* queue,
-			[[maybe_unused]] RE::BSFixedString* menu,
-			[[maybe_unused]] RE::UI_MESSAGE_TYPE type,
-			[[maybe_unused]] RE::HUDData* data)
+		static bool InvokeMod(RE::GFxValue::ObjectInterface* objInt, void* a_data, RE::GFxValue* a_result, const char* a_name, const RE::GFxValue* a_args, RE::UPInt a_numArgs, bool isDObj)
 		{
-			// do nothing on purpose
+			// We have to check this since multiple message types pass through this branch
+			if (strcmp(a_name, "HideSubtitle") == 0) {
+				return true;
+			}
+
+			return objInt->Invoke(a_data, a_result, a_name, a_args, a_numArgs, isDObj);
 		}
-		static inline REL::Relocation<decltype(AddMessageMod)> AddMessage;
 	};
 
 	namespace Hooks
@@ -60,9 +59,9 @@ namespace Subtitles
 		{
 			Subtitles::UpdatePCHook::Install();
 			if (!REL::Module::IsVR()) {
-				Subtitles::HideSubtitlesHook::Install();
+				Subtitles::InvokeHook::Install();
 			} else {
-				logger::info("Skipping AddMessage hook because I don't have the VR offset yet!");
+				logger::info("Skipping Invoke hook because I don't have the VR offset yet!");
 			}
 		}
 	}
