@@ -14,6 +14,9 @@ namespace Subtitles
 		}
 
 		numDisplayedSubtitles = ini.GetLongValue("Subtitles", "numDisplayedSubtitles", 4);
+		dimBackgroundSubtitles = ini.GetBoolValue("Subtitles", "dimBackgroundSubtitles", false);
+		foregroundSubtitleColor = std::string(ini.GetValue("Subtitles", "foregroundSubtitleColor", "FFFFFF"));
+		backgroundSubtitleColor = std::string(ini.GetValue("Subtitles", "backgroundSubtitleColor", "BBBBBB"));
 
 		logger::info("Configuration initialized");
 	}

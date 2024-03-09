@@ -31,6 +31,8 @@ namespace Subtitles
 		uint32_t speakerNameColor = iniSettings->GetSetting("iSubtitleSpeakerNameColor:Interface")->GetUInt();
 
 		constexpr const char* speakerNameFmtString = "<font color='#{:06X}'>{}</font>: {}";
+		constexpr const char* speakerNameFmtColorText = "<font color='#{:06X}'>{}</font>: <font color='#{}'>{}</font>";
+		constexpr const char* noSpeakerNameFmtColorText = "<font color='#{}'>{}</font>";
 
 		// avoid the flickering in combat issue
 		std::sort(activeSubtitles.begin(), activeSubtitles.end(), [](RE::SubtitleInfo*& a, RE::SubtitleInfo*& b) {
@@ -51,9 +53,15 @@ namespace Subtitles
 
 		bool first = true;
 		uint32_t numDisplayed = 0;
+		float closest = INFINITY;
 		for (auto info : activeSubtitles) {
 			if (numDisplayed >= maxDisplayedSubtitles) {
 				break;
+			}
+
+			// activeSubtitles is sorted by distance, so this will only happen on the first subtitle
+			if (info->targetDistance < closest) {
+				closest = info->targetDistance;
 			}
 
 			// `targetDistance` is the squared distance
@@ -66,9 +74,42 @@ namespace Subtitles
 				auto speakerName = GetDisplayName(info->speaker.get().get());
 
 				if (showSpeakerName && speakerName && speakerName[0]) {
-					bigSubtitle << std::format(speakerNameFmtString, speakerNameColor, speakerName, info->subtitle.c_str());
+					if (Configuration::GetSingleton()->dimBackgroundSubtitles) {
+						// Do it this way so we can handle the case where two subtitles have the same distance
+						if (info->targetDistance == closest) {
+							bigSubtitle << std::format(
+								speakerNameFmtColorText,
+								speakerNameColor,
+								speakerName,
+								Configuration::GetSingleton()->foregroundSubtitleColor,
+								info->subtitle.c_str());
+						} else {
+							bigSubtitle << std::format(
+								speakerNameFmtColorText,
+								speakerNameColor,
+								speakerName,
+								Configuration::GetSingleton()->backgroundSubtitleColor,
+								info->subtitle.c_str());
+						}
+					} else {
+						bigSubtitle << std::format(speakerNameFmtString, speakerNameColor, speakerName, info->subtitle.c_str());
+					}
 				} else {
-					bigSubtitle << info->subtitle.c_str();
+					if (Configuration::GetSingleton()->dimBackgroundSubtitles) {
+						if (info->targetDistance == closest) {
+							bigSubtitle << std::format(
+								noSpeakerNameFmtColorText,
+								Configuration::GetSingleton()->foregroundSubtitleColor,
+								info->subtitle.c_str());
+						} else {
+							bigSubtitle << std::format(
+								noSpeakerNameFmtColorText,
+								Configuration::GetSingleton()->backgroundSubtitleColor,
+								info->subtitle.c_str());
+						}
+					} else {
+						bigSubtitle << info->subtitle.c_str();
+					}
 				}
 				numDisplayed += 1;
 

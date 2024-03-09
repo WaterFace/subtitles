@@ -19,6 +19,9 @@ namespace Subtitles
 
 		// Settings
 		uint32_t numDisplayedSubtitles;
+		bool dimBackgroundSubtitles;
+		std::string backgroundSubtitleColor;
+		std::string foregroundSubtitleColor;
 
 	protected:
 		Configuration() = default;
