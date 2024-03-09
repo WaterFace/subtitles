@@ -38,7 +38,13 @@ namespace Subtitles
 				return true;
 			if (a->targetDistance > b->targetDistance)
 				return false;
-			return a->speaker.get().get() < b->speaker.get().get();
+			auto ptrA = a->speaker.get().get();
+			auto ptrB = b->speaker.get().get();
+			if (ptrA < ptrB)
+				return true;
+			if (ptrA > ptrB)
+				return false;
+			return strcmp(a->subtitle.c_str(), b->subtitle.c_str()) < 0;
 		});
 
 		std::stringstream bigSubtitle{};
