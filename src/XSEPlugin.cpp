@@ -1,6 +1,7 @@
 #define DLLEXPORT __declspec(dllexport)
 #include "Configuration.h"
 #include "Hooks.h"
+#include "NPCNameProvider.h"
 
 void InitializeLog([[maybe_unused]] spdlog::level::level_enum a_level = spdlog::level::info)
 {
@@ -31,10 +32,10 @@ void InitializeMessaging()
 	if (!SKSE::GetMessagingInterface()->RegisterListener([](SKSE::MessagingInterface::Message* message) {
 			switch (message->type) {
 			case SKSE::MessagingInterface::kDataLoaded:
+				NPCNameProvider::GetSingleton()->RequestAPI();
 				Subtitles::Hooks::Install();
 				Subtitles::Configuration::GetSingleton()->Initialize();
 				break;
-
 			default:
 				break;
 			}

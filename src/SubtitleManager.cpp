@@ -1,14 +1,12 @@
-#include "SubtitleManager.h"
+#include "SubtitleManager.h" 
+#include "NPCNameProvider.h"
 
 namespace Subtitles
 {
 	const char* SubtitleManager::GetDisplayName(RE::TESObjectREFR* ref)
 	{
-		auto actor = ref ? ref->As<RE::Actor>() : nullptr;
-		auto xTextData = actor ? actor->extraList.GetByType<RE::ExtraTextDisplayData>() : nullptr;
-
-		if (xTextData) {
-			return xTextData->displayName.c_str();
+		if (auto actor = ref->As<RE::Actor>(); actor) {
+			return NPCNameProvider::GetSingleton()->GetName(actor);
 		} else {
 			return ref->GetName();
 		}
