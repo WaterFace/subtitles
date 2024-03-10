@@ -1,7 +1,7 @@
 #include "NPCNameProvider.h"
 #include "NND_API.h"
 
-const char* NPCNameProvider::GetName(const RE::Actor* actor) const
+const char* NPCNameProvider::GetName(RE::Actor* actor) const
 {
 	if (NND) {
 		if (auto name = NND->GetName(actor, NND_API::NameContext::kSubtitles); !name.empty()) {
@@ -10,7 +10,13 @@ const char* NPCNameProvider::GetName(const RE::Actor* actor) const
 	}
 
 	if (auto xTextData = actor->extraList.GetByType<RE::ExtraTextDisplayData>(); xTextData) {
-		return xTextData->displayName.c_str();
+		return actor->GetDisplayFullName();
+	}
+
+	if (auto actorBase = actor->GetActorBase(); actorBase) {
+		if (actorBase->shortName.size() > 0) {
+			return actorBase->shortName.c_str();
+		}
 	}
 
 	return actor->GetName();
