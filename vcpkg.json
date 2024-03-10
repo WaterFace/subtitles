@@ -2,7 +2,7 @@
   "name": "subtitles",
   "version-semver": "0.5.0",
   "description": "",
-  "license": "GPL-3.0",
+  "license": "CC0-1.0",
   "dependencies": [
     "fmt",
     "directxtk",
