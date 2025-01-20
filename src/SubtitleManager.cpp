@@ -1,4 +1,4 @@
-#include "SubtitleManager.h" 
+#include "SubtitleManager.h"
 #include "NPCNameProvider.h"
 
 namespace Subtitles
@@ -69,7 +69,12 @@ namespace Subtitles
 				}
 
 				// Talking Activators don't have a name, so handle that gracefully
-				auto speakerName = GetDisplayName(info->speaker.get().get());
+				const char* speakerName = "";
+				if (const auto speakerRefPtr = info->speaker.get(); speakerRefPtr) {
+					if (const auto speakerRef = speakerRefPtr.get(); speakerRef) {
+						speakerName = GetDisplayName(speakerRef);
+					}
+				}
 
 				if (showSpeakerName && speakerName && speakerName[0]) {
 					if (Configuration::GetSingleton()->dimBackgroundSubtitles) {
